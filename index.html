@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SymptoCare - AI Sağlık Asistanı</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border: 1px solid #ffecb5;
+            color: #856404;
+            padding: 15px;
+            margin: 20px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        .symptom-section {
+            margin-bottom: 30px;
+        }
+
+        .symptom-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .symptom-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .symptom-input input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .symptom-input input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .symptom-input button {
+            padding: 12px 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        .symptom-input button:hover {
+            background: #2980b9;
+        }
+
+        .symptom-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .symptom-tag {
+            background: #e8f6ff;
+            color: #2c3e50;
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid #3498db;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .symptom-tag .remove-btn {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 0;
+        }
+
+        .quick-symptoms h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .symptom-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .symptom-buttons button {
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .symptom-buttons button:hover {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        .location-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .location-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        #locationBtn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        #locationBtn:hover {
+            background: #218838;
+        }
+
+        #locationStatus {
+            margin-top: 10px;
+            color: #28a745;
+            font-weight: 500;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        .analyze-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s;
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .analyze-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .emergency-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s;
+            flex: 1;
+            max-width: 200px;
+            animation: pulse 2s infinite;
+        }
+
+        .emergency-btn:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #3498db;
+        }
+
+        .loading i {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .results-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .results-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .emergency-alert {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            animation: shake 0.5s infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .disease-prediction {
+            background: white;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .disease-prediction h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .institution-recommendation {
+            background: #e8f6ff;
+            border: 1px solid #3498db;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .hospital-list {
+            margin-top: 20px;
+        }
+
+        .hospital-item {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hospital-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .hospital-type {
+            background: #28a745;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .hospital-city {
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .recommendations {
+            background: #fff3cd;
+            border: 1px solid #ffecb5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .recommendations h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .recommendations ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .recommendations li {
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .recommendations li:before {
+            content: "✓";
+            color: #28a745;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .emergency-info {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e74c3c;
+            border-radius: 5px;
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .symptom-input {
+                flex-direction: column;
+            }
+            
+            .symptom-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-heartbeat"></i> SymptoCare</h1>
+            <p class="subtitle">AI Destekli Sağlık Asistanınız</p>
+        </header>
+
+        <div class="warning-box">
+            <i class="fas fa-exclamation-triangle"></i>
+            <strong>Uyarı:</strong> Bu uygulama sadece bilgilendirme amaçlıdır. Kesin tanı için mutlaka bir sağlık uzmanına başvurun.
+        </div>
+
+        <div class="main-content">
+            <div class="symptom-section">
+                <h2><i class="fas fa-stethoscope"></i> Semptomlarınızı Girin</h2>
+                <div class="symptom-input">
+                    <input type="text" id="symptomInput" placeholder="Örnek: baş ağrısı, ateş, öksürük..." />
+                    <button onclick="addSymptom()"><i class="fas fa-plus"></i> Ekle</button>
+                </div>
+                
+                <div class="symptom-tags" id="symptomTags"></div>
+                
+                <div class="quick-symptoms">
+                    <h3>Hızlı Seçim:</h3>
+                    <div class="symptom-buttons">
+                        <button onclick="addQuickSymptom('baş ağrısı')">Baş Ağrısı</button>
+                        <button onclick="addQuickSymptom('ateş')">Ateş</button>
+                        <button onclick="addQuickSymptom('öksürük')">Öksürük</button>
+                        <button onclick="addQuickSymptom('boğaz ağrısı')">Boğaz Ağrısı</button>
+                        <button onclick="addQuickSymptom('mide ağrısı')">Mide Ağrısı</button>
+                        <button onclick="addQuickSymptom('bulantı')">Bulantı</button>
+                        <button onclick="addQuickSymptom('burun akıntısı')">Burun Akıntısı</button>
+                        <button onclick="addQuickSymptom('yorgunluk')">Yorgunluk</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="location-section">
+                <h3><i class="fas fa-map-marker-alt"></i> Konum (İsteğe Bağlı)</h3>
+                <button onclick="getLocation()" id="locationBtn">
+                    <i class="fas fa-crosshairs"></i> Konumumu Tespit Et
+                </button>
+                <div id="locationStatus"></div>
+            </div>
+
+            <div class="action-buttons">
+                <button onclick="analyzeSymptoms()" class="analyze-btn">
+                    <i class="fas fa-search"></i> Analiz Et
+                </button>
+                <button onclick="checkEmergency()" class="emergency-btn">
+                    <i class="fas fa-ambulance"></i> Acil Durum Kontrolü
+                </button>
+            </div>
+
+            <div id="results" class="results-section" style="display: none;">
+                <h2><i class="fas fa-clipboard-check"></i> Analiz Sonuçları</h2>
+                <div id="resultsContent"></div>
+            </div>
+
+            <div id="loading" class="loading" style="display: none;">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Analiz ediliyor...</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 SymptoCare. Sağlığınız için güvenilir AI asistanınız.</p>
+            <div class="emergency-info">
+                <strong>ACİL DURUM: 112</strong>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        let symptoms = [];
+        let userLocation = null;
+
+        // Add symptom from input field
+        function addSymptom() {
+            const input = document.getElementById('symptomInput');
+            const symptom = input.value.trim();
+            
+            if (symptom && !symptoms.includes(symptom)) {
+                symptoms.push(symptom);
+                updateSymptomTags();
+                input.value = '';
+            }
+        }
+
+        // Add quick symptom
+        function addQuickSymptom(symptom) {
+            if (!symptoms.includes(symptom)) {
+                symptoms.push(symptom);
+                updateSymptomTags();
+            }
+        }
+
+        // Update symptom tags display
+        function updateSymptomTags() {
+            const container = document.getElementById('symptomTags');
+            container.innerHTML = '';
+            
+            symptoms.forEach(symptom => {
+                const tag = document.createElement('div');
+                tag.className = 'symptom-tag';
+                tag.innerHTML = `
+                    ${symptom}
+                    <button class="remove-btn" onclick="removeSymptom('${symptom}')">×</button>
+                `;
+                container.appendChild(tag);
+            });
+        }
+
+        // Remove symptom
+        function removeSymptom(symptom) {
+            symptoms = symptoms.filter(s => s !== symptom);
+            updateSymptomTags();
+        }
+
+        // Get user location
+        function getLocation() {
+            const btn = document.getElementById('locationBtn');
+            const status = document.getElementById('locationStatus');
+            
+            if (navigator.geolocation) {
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Konum alınıyor...';
+                btn.disabled = true;
+                
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        userLocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        
+                        status.innerHTML = '<i class="fas fa-check"></i> Konum başarıyla tespit edildi';
+                        btn.innerHTML = '<i class="fas fa-check"></i> Konum Tespit Edildi';
+                        btn.disabled = false;
+                    },
+                    function(error) {
+                        status.innerHTML = '<i class="fas fa-times"></i> Konum alınamadı';
+                        btn.innerHTML = '<i class="fas fa-crosshairs"></i> Konumumu Tespit Et';
+                        btn.disabled = false;
+                        console.error('Konum hatası:', error);
+                    }
+                );
+            } else {
+                status.innerHTML = '<i class="fas fa-times"></i> Tarayıcınız konum özelliğini desteklemiyor';
+            }
+        }
+
+        // Analyze symptoms
+        async function analyzeSymptoms() {
+            if (symptoms.length === 0) {
+                alert('Lütfen en az bir semptom girin');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        symptoms: symptoms,
+                        location: userLocation
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayResults(data);
+                } else {
+                    throw new Error(data.error || 'Analiz hatası');
+                }
+                
+            } catch (error) {
+                console.error('Hata:', error);
+                alert('Analiz sırasında bir hata oluştu: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Check emergency
+        async function checkEmergency() {
+            if (symptoms.length === 0) {
+                alert('Lütfen en az bir semptom girin');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                const response = await fetch('/emergency', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        symptoms: symptoms
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayEmergencyResult(data);
+                } else {
+                    throw new Error(data.error || 'Acil durum kontrolü hatası');
+                }
+                
+            } catch (error) {
+                console.error('Hata:', error);
+                alert('Acil durum kontrolü sırasında bir hata oluştu: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Display analysis results
+        function displayResults(data) {
+            const resultsContainer = document.getElementById('resultsContent');
+            
+            let html = '';
+            
+            if (data.emergency) {
+                html += `
+                    <div class="emergency-alert">
+                        <i class="fas fa-ambulance"></i>
+                        ${data.message}
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="disease-prediction">
+                        <h3><i class="fas fa-diagnoses"></i> Tahmin Edilen Durumlar</h3>
+                        <p>${data.message}</p>
+                        ${data.predicted_diseases ? `
+                            <ul>
+                                ${data.predicted_diseases.map(disease => `<li>${disease}</li>`).join('')}
+                            </ul>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="institution-recommendation">
+                        <h4><i class="fas fa-hospital"></i> Önerilen Sağlık Kuruluşu</h4>
+                        <p><strong>${data.recommended_institution}</strong></p>
+                    </div>
+                `;
+                
+                if (data.hospitals && data.hospitals.length > 0) {
+                    html += `
+                        <div class="hospital-list">
+                            <h4><i class="fas fa-map-marker-alt"></i> Yakın Hastaneler</h4>
+                            ${data.hospitals.map(hospital => `
+                                <div class="hospital-item">
+                                    <div>
+                                        <div class="hospital-name">${hospital.name}</div>
+                                        <div class="hospital-city">${hospital.city}</div>
+                                    </div>
+                                    <div class="hospital-type">${hospital.type}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+                
+                if (data.recommendations && data.recommendations.length > 0) {
+                    html += `
+                        <div class="recommendations">
+                            <h4><i class="fas fa-lightbulb"></i> Öneriler</h4>
+                            <ul>
+                                ${data.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+            }
+            
+            resultsContainer.innerHTML = html;
+            document.getElementById('results').style.display = 'block';
+            
+            // Scroll to results
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Display emergency result
+        function displayEmergencyResult(data) {
+            const resultsContainer = document.getElementById('resultsContent');
+            
+            let html = '';
+            
+            if (data.is_emergency) {
+                html += `
+                    <div class="emergency-alert">
+                        <i class="fas fa-ambulance"></i>
+                        ${data.message}
+                        <div style="margin-top: 15px;">
+                            <strong>HEMEN YAPMANIZ GEREKENLER:</strong>
+                            <ul style="text-align: left; margin-top: 10px;">
+                                <li>112 Acil Servis'i arayın</li>
+                                <li>En yakın hastaneye gidin</li>
+                                <li>Sakin kalmaya çalışın</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="disease-prediction">
+                        <h3><i class="fas fa-check-circle"></i> Acil Durum Tespiti</h3>
+                        <p style="color: #28a745;">${data.message}</p>
+                        <p>Normal analiz için "Analiz Et" butonunu kullanabilirsiniz.</p>
+                    </div>
+                `;
+            }
+            
+            resultsContainer.innerHTML = html;
+            document.getElementById('results').style.display = 'block';
+            
+            // Scroll to results
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Show/hide loading
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+            document.getElementById('results').style.display = show ? 'none' : 'block';
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Enter key support for symptom input
+            document.getElementById('symptomInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addSymptom();
+                }
+            });
+            
+            // Initialize
+            updateSymptomTags();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SymptoCare - AI Sağlık Asistanı</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-heartbeat"></i> SymptoCare</h1>
+            <p class="subtitle">AI Destekli Sağlık Asistanınız</p>
+        </header>
+
+        <div class="warning-box">
+            <i class="fas fa-exclamation-triangle"></i>
+            <strong>Uyarı:</strong> Bu uygulama sadece bilgilendirme amaçlıdır. Kesin tanı için mutlaka bir sağlık uzmanına başvurun.
+        </div>
+
+        <div class="main-content">
+            <div class="symptom-section">
+                <h2><i class="fas fa-stethoscope"></i> Semptomlarınızı Girin</h2>
+                <div class="symptom-input">
+                    <input type="text" id="symptomInput" placeholder="Örnek: baş ağrısı, ateş, öksürük..." />
+                    <button onclick="addSymptom()"><i class="fas fa-plus"></i> Ekle</button>
+                </div>
+                
+                <div class="symptom-tags" id="symptomTags"></div>
+                
+                <div class="quick-symptoms">
+                    <h3>Hızlı Seçim:</h3>
+                    <div class="symptom-buttons">
+                        <button onclick="addQuickSymptom('baş ağrısı')">Baş Ağrısı</button>
+                        <button onclick="addQuickSymptom('ateş')">Ateş</button>
+                        <button onclick="addQuickSymptom('öksürük')">Öksürük</button>
+                        <button onclick="addQuickSymptom('boğaz ağrısı')">Boğaz Ağrısı</button>
+                        <button onclick="addQuickSymptom('mide ağrısı')">Mide Ağrısı</button>
+                        <button onclick="addQuickSymptom('bulantı')">Bulantı</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="location-section">
+                <h3><i class="fas fa-map-marker-alt"></i> Konum (İsteğe Bağlı)</h3>
+                <button onclick="getLocation()" id="locationBtn">
+                    <i class="fas fa-crosshairs"></i> Konumumu Tespit Et
+                </button>
+                <div id="locationStatus"></div>
+            </div>
+
+            <div class="action-buttons">
+                <button onclick="analyzeSymptoms()" class="analyze-btn">
+                    <i class="fas fa-search"></i> Analiz Et
+                </button>
+                <button onclick="checkEmergency()" class="emergency-btn">
+                    <i class="fas fa-ambulance"></i> Acil Durum Kontrolü
+                </button>
+            </div>
+
+            <div id="results" class="results-section" style="display: none;">
+                <h2><i class="fas fa-clipboard-check"></i> Analiz Sonuçları</h2>
+                <div id="resultsContent"></div>
+            </div>
+
+            <div id="loading" class="loading" style="display: none;">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Analiz ediliyor...</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 SymptoCare. Sağlığınız için güvenilir AI asistanınız.</p>
+            <div class="emergency-info">
+                <strong>ACİL DURUM: 112</strong>
+            </div>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
